@@ -177,3 +177,131 @@ csvemp1
 
 csvemp2 <- read.csv("emp2.csv",header=F,col.names = c("사번","이름","급여"),fileEncoding = "CP949",encoding = "UTF-8")
 csvemp2
+
+# 접근(실제 데이터의 전체 데이터를 보관하기에는 data.flame이 가장 보편화)
+aws = read.delim("../data/AWS_sample.txt", sep ="#",fileEncoding = "CP949",encoding = "UTF-8")
+head(aws) # 5~6개 정도 뽑아주는 함수
+View(aws)
+getwd()
+(aws[1,1])
+x1 <- aws[1:3, 2:4] 
+x1
+x2 <- aws[9:11, 2:4]
+x2
+cbind(x1, x2)
+rbind(x1, x2)
+aws[,1]
+aws$AWS_ID # $ :특정 열의 값만 뽑기
+class(aws$AWS_ID)
+class(aws$X.)
+
+# 구조 확인
+str(aws) # mysql에서 desc의 역할
+
+# 기본 통계량
+summary(aws) # 데이터의 성격 파악
+
+# apply() * data.frame에서 쓰이는 apply
+df <- data.frame(x=c(1:5), y=seq(2,10,2), z=c("a","b","c","d","e"))
+df
+
+apply(df[,c(1,2)],1,sum) # 행의 합
+apply(df[,c(1,2)],2,sum) # 열의 합
+
+# 데이터의 일부분 추출
+x1 <- subset(df, x >= 3) # 조건을 검
+x1
+x2 <- subset(df,x>=2 & y<=6)
+x2
+
+# 병합
+height <- data.frame(id=c(1,2), h=c(180,175))
+weight <- data.frame(id=c(1,2), w=c(80,75))
+
+user <- merge(height,weight, by.x = "id", by.y = "id") # mysql의 join 뒤에 쓰는 on(조건)과 같은 개념
+user
+
+
+#### array ####
+
+v <- c(1:12)
+v
+arr <- array(v,c(4,2,3))
+arr
+
+# 접근
+arr[,,1] # 첫번째 2차원 배열의 접근(행,열,면)
+arr[,,2] # 두번째 2차원 배열의 접근(행,열,면)
+
+# 추출
+arr[2,2,1]
+arr[,,1][2,2]
+
+
+#### list ####
+x1 <- 1
+x2 <- data.frame(val1=c(1,2,3),val2=c('a', 'b', 'c'))
+x3 <- matrix(c(1:12),ncol=2)
+x4 <- array(1:20,dim = c(2,5,2))
+
+x5 <- list(c1=x1, c2=x2, c3=x3, c4=x4)
+x5
+
+x5$c1 # x5의 c1만 추출
+x5$c2 # x5의 c2만 추출
+
+list1 <- list(c("lee","kim"),"이순신",95)
+list1
+
+list1[1]
+list1[[1]] # 데이터만 뽑아오겠다 할때 사용
+list1[[1]][1]
+list1[[1]][2]
+
+list1 <- list("lee","이순신",95)
+un <- unlist(list1) # 언패킹(3차원을 1차원으로)
+un
+class(un)
+
+# apply : lapply(), sapply()
+# lapply() : lapply는 vector를 입력받기 위한 함수, 반환형이 list형이다.(apply는 2차원 이상의 데이터만 입력을 받을 수 있다.)
+# sapply() : 반환형이 matrix 또는 vector로 반환(lapply의 wrapper)
+
+a <- list(c(1:5))
+a
+b <- list(c(6:10))
+b
+
+c <- c(a,b)
+c
+class(c)
+mode(c)
+
+x <- lapply(c,max)
+x
+x1 <- unlist(x)
+x1
+
+y <- sapply(c,max)
+y
+
+
+#### 기타 데이터 타입 ####
+
+# 날짜
+Sys.Date() # 오늘 날짜
+Sys.time() # 현재날짜 및 시간
+
+a <- '21/05/03'
+a
+class(a)
+
+b <- as.Date(a)
+class(b)
+b
+
+c <- as.Date(a,"%y/%m/%d")
+c
+
+
+
