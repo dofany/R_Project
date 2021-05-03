@@ -40,3 +40,12 @@
   2) R에서 가장 많이 사용되는 구조
   3) 컬럼 단위로 서로 다른 데이터 타입 사용가능
   4) data.frame(), read.csv(), read.delim(), read.table(), ....
+  
+5. array
+  1) 행, 열, 면의 3차원 배열 형태의 객체 생성
+  2) array()
+  
+6. list
+  1) key와 value를 한 쌍으로 묶어 사용
+  2) python에서의 dict와 유사
+  3) list()
