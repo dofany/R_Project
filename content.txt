@@ -7,7 +7,7 @@
   1) is.xxx()
   2) as.xxx()
     
-1. 데이터 타입
+I. 데이터 타입
 ====================
 1) 스칼라(0차원)
   - 숫자(Numeric), 문자열(Character), 불린(boolean), 팩터(factor), 결측치(NA, NAN, Null)
@@ -17,35 +17,81 @@
 5) Array(3차원 이상)
 6) List(3차원 이상)
 ---------------------------------------------------------
-1 vector : 여러개를 연결(배열구조)
+1-1. vector : 여러개를 연결(배열구조)
   1) 기본 자료구조
   2) 1차원 배열
   3) 인덱스 접근
   4) 동일한 자료형만 저장
   5) c() : combine의 약자, seq(),rep() = vector 생성 함수
 
-2. Factor
+1-2. Factor
   1) 범주형 데이터
     - 명목형(Norminal)
     - 순서형(Ordinal)
   2) 상대적으로 수치형 데이터(이산형, 연속형)가 있다.
   
-3. Matrix
+1-3. Matrix
   1) 행과 열의 2차원 배열
   2) 동일한 데이터 타입만 저장 가능
   3) matrix(), rbind(), cbind(),...
 
-4. data.frame
+1-4. data.frame
   1) DB의 table과 유사
   2) R에서 가장 많이 사용되는 구조
   3) 컬럼 단위로 서로 다른 데이터 타입 사용가능
   4) data.frame(), read.csv(), read.delim(), read.table(), ....
   
-5. array
+1-5. array
   1) 행, 열, 면의 3차원 배열 형태의 객체 생성
   2) array()
   
-6. list
+1-6. list
   1) key와 value를 한 쌍으로 묶어 사용
   2) python에서의 dict와 유사
   3) list()
+  
+============================================================
+
+II. 기술 통계량
+
+1) min(vec), max(vec) : 최소값, 최대값
+2) range(vec) : 벡터를 대상으로 범위값을 구하는 함수
+3) mean(vec), median(vec) # 평균, 중앙값
+4) sum(vec) : 합
+5) order(vec) : 정렬
+6) rank(vec) : 순위
+7) sd(), var(rec) : 표준편차, 분산
+8) summary(vec) : 통계량 한번에 보기
+9) quantile(vec) : 분위수, 백분위수, 사분위수를 구하는 함수 
+10) table(vec) : 범주형 자료의 분할표를 만들 때 사용
+11) str() : 데이터 구조 확인
+12) sample(x, y) : x의 범위에서 y만큼 셈플 데이터를 생성하는 함수
+13) head(), tail() : 첫 6개, 마지막 6개의 데이터 추출
+14) unique() : 중복데이터 전처리
+
+============================================================
+
+III. dplyr
+
+1) filter() : 원하는 행의 데이터 추출 -> subset(), 데이터[행 추출조건,], sql의 where와 유사
+2) select() : 원하는 열의 데이터 추출 -> 데이터[,열 추출조건], sql의 select와 유사
+3) arrange() : 정렬 -> order(), sort()
+4) mutate() : 열 추가 -> transform()
+5) summarize() : 통계량 산출 -> aggregate()
+6) groupby() : 집단별로 나누기 -> subset(), tapply(), aggregate()
+7) left_join() : 데이터 합치기(열) -> cbind()
+8) bind_rows() : 데이터 합치기(행) -> rbind()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
