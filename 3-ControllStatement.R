@@ -130,13 +130,71 @@ test2(y=20, x=10)
 
 ### 가변인수 : ...사용 ###
 test3 <- function(...){
-  print(list(...)) # 어떤 값인지 모르므로 리스트로 받아와야함
+  # print(list(...)) # 어떤 값인지 모르므로 리스트로 받아와야함
+  for(i in list(...)) print(i)
 }
 test3(10)
 test3(10,20)
 test3(10,20,30)
 test3(10,20,30,40)
 test3("3","지디",122)
+
+test4 <- function(a,b,...){
+  print(a)
+  print(b)
+  print("-----------")
+  print(list(...))
+}
+
+test4(10,20,30,40)
+
+
+#### 문자열 함수 ####
+
+### stringr: 정규 표현식 활용 ###
+install.packages("stringr")
+library("stringr") # require(stringr) : 에러없이 통과
+
+str1 <- "지디33태양32탑31"
+
+str_extract(str1, "\\d{2}") # extract : 추출하는 함수 , \ : \는 특수문자로 인식해 \\로 사용
+str_extract_all(str1, "\\d{2}") # 숫자 전부 추출
+str_extract_all(str1, "[0-9]{2}")
+
+str2 <- "hongkd105leess1002tou25TOM400강감찬2005"
+str_extract_all(str2, "[a-zA-Z가-힣]+") # 이름만 추출(한글 : 가-힣)
+
+length(str2) 
+str_length(str2) # 문자의 갯수
+
+str_locate(str2, "강감찬") # 찾고자하는 문자 찾기
+
+str2 <- str_c(str2,"유비55") # contain : 맨 뒤에 문자 추가
+str2
+
+str3 <- "hongkd105,leess1002,tou25,TOM400,강감찬2005"
+str_split(str3, ",") # 문자열을 지정한 문자로 나누기
+
+
+#### 기본 함수 ####
+sample <- data.frame(c1 = c('abc_abcdefg','abc_ABCDE','ccd'), c2 = 1:3)
+sample
+
+nchar(sample[1, 1]) # 문자열의 갯수
+which(sample[,1] == "ccd") # 문자의 위치 찾기
+toupper(sample[1,1]) # 대문자로 변경
+tolower(sample[1,1]) # 소문자로 변경
+substr(sample[,1], start = 1, stop = 2) # 특정 위치의 문자만 추출
+paste0(sample[,1],sample[,2]) # 두개의 데이터를 붙여주는 함수
+paste(sample[,1],sample[,2], sep="@@") # 구분자를 넣어줄 수 있다
+
+#### 문자열을 분리해서 하나의 컬럼을 두개의 컬럼으로 확장 ####
+install.packages("splitstackshape")
+library(splitstackshape)
+
+cSplit(sample, splitCols = "c1", sep="_") # c1의 컬럼을 '_'를 기준으로 분리
+
+
 
 
 
