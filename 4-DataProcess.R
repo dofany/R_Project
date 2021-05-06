@@ -249,3 +249,185 @@ table(midwest$grade)
 # 전체 인구 대비 아시아인 인구 백분율(ratio_asian) 변수를 추가하고 하위 10개 지역의 state, county, 아시아인 인구 백분율을 출력
 midwest <- midwest %>% mutate(ratio_asian = (popasian/poptotal)*100) %>% arrange(ratio_asian) %>% select(state,county,ratio_asian) %>% head(10)
 midwest
+
+
+#### Data Preprocessing ####
+
+#### 1. 데이터 탐색
+
+### 변수명 바꾸기
+df_raw <- data.frame(var1=c(1,2,3), var2=c(2,3,2))
+df_raw
+
+# 기본(내장) 함수
+df_raw1 <- df_raw
+names(df_raw1) <- c("v1","v2")
+df_raw1
+
+library(dplyr)
+df_raw2 <- df_raw
+df_raw2 <- rename(df_raw2, v1=var1, v2=var2) # dplyr에 있는 함수
+df_raw2
+
+#### 2. 결측치 처리
+dataset1 <- read.csv("../data//dataset.csv", header=T)
+str(dataset1)
+head(dataset1)
+View(dataset1)
+
+# resident : 1 ~ 5까지의 값을 갖는 명목변수로 거주지를 나타낸다.
+# gender : 1 ~ 2까지의 값을 갖는 명목변수로 남/여를 나타냄
+# job : 1 ~ 3까지의 값을 갖는 명목변수. 직업을 나타냄
+# age : 양적변수(비율) : 2 ~ 69 (문자 : 질적 / 숫자 : 양적)
+# position : 1 ~ 5까지의 값을 갖는 명목변수. 직위를 나타냄
+# price : 양적변수(비율) : 2.1 ~ 7.9까지
+# survey : 만족도 조사 : 1 ~ 5까지의 명목변수
+
+y <- dataset1$price
+plot(y)
+
+attach(dataset1) # 항상 모든 변수에는 dataset1$이 붙음
+plot(price)
+
+detach(dataset1) # attach로 인해 dataset1$이 붙었던것을 때워낼때 
+plot(price)
+
+# 결측치 확인
+summary(dataset1$price)
+
+# 결측치 제거
+sum(dataset1$price, na.rm = T) # 결측치가 있으면 계산이 안됨
+
+price2 <- na.omit(dataset1$price) # 결측값이 들어있는 행 전체를 데이터 셋에서 제거
+summary(price2)
+
+# 결측치 대체 : 0으로 대체
+price3 <- ifelse(is.na(dataset1$price),0,dataset1$price)
+summary(price3)
+sum(price3)
+mean(price3)
+
+# 결측치 대체 : 평균으로 대체
+price4 <- ifelse(is.na(dataset1$price),round(mean(dataset1$price, na.rm = T),2),dataset1$price)
+summary(price4)
+sum(price4)
+mean(price4)
+
+
+#### 3. 이상치 처리
+# 양적변수와 질적변수 구별 
+# 색깔(질적), 무게(양적), 소프트웨어 버전(질적), 자동차년식(질적)
+# 온도(양적), 스카우트 순위(질적)
+
+# 질적변수 : 도수분포표, 분할표 => 막대 그래프(도수), 원도표, ...
+table(dataset1$gender)
+pie(table(dataset1$gender))
+
+# 양적변수 : 산술평균, 조화평균, 중앙값 => 히스토그램, 상자도표, 시계열도표, 산포도
+summary(dataset1$price)
+length(dataset1$price) # 데이터 개수
+str(dataset1)
+
+plot(dataset1$price) # 분포도
+boxplot(dataset1$price) # 상자도표
+
+# 이상치 처리
+dataset2 <- subset(dataset1, price >= 2 & price <=8) # 데이터 추출
+length(dataset2$price)
+
+plot(dataset2$price)
+boxplot(dataset2$price)
+summary(dataset2$price)
+
+summary(dataset2$age)
+plot(dataset2$age)
+boxplot(dataset2$age)
+
+
+#### 4. Feature Engineering
+View(dataset2)
+
+# 가독성을 위해 데이터를 변경
+dataset2$resident2[dataset2$resident == 1] <- "서욽특별시"
+dataset2$resident2[dataset2$resident == 2] <- "인천광역시"
+dataset2$resident2[dataset2$resident == 3] <- "대전광역시"
+dataset2$resident2[dataset2$resident == 4] <- "대구광역시"
+dataset2$resident2[dataset2$resident == 5] <- "시구군"
+
+## Binning : 척도 변경(양적 -> 질적)
+# 나이 변수를 청년층(30세 이하), 중년층(31~55세 이하), 장년층(56~ 이상)
+dataset2$age2[dataset2$age<=30] <- "청년층"
+dataset2$age2[dataset2$age>=31 & dataset2$age<=55] <- "중년층"
+dataset2$age2[dataset2$age>55] <- "장년층"
+
+## 역코딩
+table(dataset2$survey)
+t_survey <- dataset2$survey
+t_survey
+
+c_survey <- 6-t_survey
+dataset2$survey <- c_survey
+
+## Dummy : 척도 변경(질적 -> 양적)
+# 거주 유형 : 단독주택(1), 다가구주택(2), 아파트(3), 오피스텔(4)
+# 직업 유형 : 자영업(1), 사무직(2), 서비스직(3), 전문직(4), 기타(5)
+
+user_data <- read.csv("../data/user_data.csv",header = T,fileEncoding = "CP949",encoding = "UTF-8")
+View(user_data)
+
+table(user_data$house_type)
+
+# house_type2컬럼을 새로 추가해서단독과 다가구는 0으로, 아파트와 오피스텔은 1로 변환
+house_type2 <- ifelse(user_data$house_type==1 | user_data$house_type==2,0,1)
+user_data$house_type <- house_type2
+table(user_data$house_type)
+
+
+## 데이터 구조 변경(wide type, long type) : melt() => long형으로 변경, cast() => wide형으로 변경 
+# reshape, reshape2, tibyr,  ...
+install.packages("reshape2")
+library(reshape2)
+
+str(airquality)
+head(airquality)
+
+ml <- melt(airquality, id.vars = c("Month","Day")) # melt() : 식별자id, 측정 변수variable, 측정치value 형태로 데이터를 재구성
+View(ml) 
+
+ml2 <- melt(airquality, id.vars = c("Month","Day"), variable_name = "climate_var", value.name = "climate_val") # 컬럼명 변경
+View(ml2) 
+
+dcl <- dcast(ml2, Month+Day ~ climate_val)
+View(dcl)
+
+# 예제 1
+data <- read.csv("../data/data.csv")
+View(data)
+
+# 날짜별로 컬럼을 생성해서 wide하게 변경
+date <- dcast(data, Customer_ID~Date)
+View(date)
+
+date <- dcast(data, Customer_ID~Date,mean)
+View(date)
+
+# 다시 long 형으로
+date2 <- melt(date, id.vars = "Customer_ID", variable_name = "Date", value.name = "Buy")
+View(date2)
+
+# 예제 2
+data <- read.csv("../data/pay_data.csv",fileEncoding = "CP949",encoding = "UTF-8")
+View(data)
+
+# product type을 기준으로 wide하게 변경
+data1 <- dcast(data,user_id~product_type)
+View(data1)
+
+###################################################
+# 주제 : 자살 방지를 위한 도움의 손길은 누구에게? #
+###################################################
+
+install.packages("readxl")
+library(readxl)
+hand <- readxl::read_excel(path="../data/samang.xlsx")
+
