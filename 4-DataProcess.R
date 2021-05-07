@@ -427,7 +427,105 @@ View(data1)
 # 주제 : 자살 방지를 위한 도움의 손길은 누구에게? #
 ###################################################
 
-install.packages("readxl")
-library(readxl)
-hand <- readxl::read_excel(path="../data/samang.xlsx")
+# 데이터 불러오기
 
+library(dplyr)
+hand <- read.csv("../data/samang.csv",fileEncoding = "CP949",encoding = "UTF-8")
+str(hand)
+View(hand)
+
+man <- hand[21:29, c(3, 4, 5)]
+man
+
+woman <- hand[40:58, c(4, 5)]
+woman
+
+total <- cbind(man, woman)
+total
+
+names(total) <- c("연령", "남자사망자수", "남자사망률", "여자사망자수","여자사망률")
+total
+
+total$age <- 0
+step <- 5
+for(i in 1:19){
+  total[i,"age"]<- step
+  step <- step + 5
+}
+total
+
+# 20살 이하는 10, 21 ~ 30는 20, ...
+total$gae2[total$age <= 20] <- 10
+total$age2[total$age > 20 & total$age <= 30] <- 20 
+total$age2[total$age > 30 & total$age <= 40] <- 30 
+total$age2[total$age > 40 & total$age <= 50] <- 40 
+total$age2[total$age > 50 & total$age <= 60] <- 50 
+total$age2[total$age > 60 & total$age <= 70] <- 60 
+total$age2[total$age > 70 & total$age <= 80] <- 70 
+total$age2[total$age > 80 & total$age <= 90] <- 80 
+total$age2[total$age > 90] <- 90 
+
+total
+
+total$여자사망률 <- as.numeric(total$여자사망률)
+total$남자사망률 <- as.numeric(total$남자사망률)
+
+total %>% group_by(age2) %>% summarise(sd_man=sd(남자사망률), sd_woman=sd(여자사망률))
+
+#### MySql 연동 ####
+
+install.packages("rJava")
+install.packages("DBI")
+install.packages('RMySQL')
+library(RMySQL)
+
+conn <- dbConnect(MySQL(), dbname ="rtest", user="root",password="ehghks9580",host="127.0.0.1")
+conn
+
+dbListTables(conn) # show tables;
+
+result <- dbGetQuery(conn, "select count(*) from score")
+result
+class(result)
+
+dbListFields(conn, "score") # 테이블의 필드
+
+# DML
+dbSendQuery(conn, "delete from score where student_no=1")
+result <- dbGetQuery(conn, "select count(*) from score")
+result
+
+# 파일로부터 데이터를 읽어들여 db에 저장
+dbSendQuery(conn, "drop table score")
+dbListTables(conn)
+
+file_score <- read.csv("../data/score.csv", header = T)
+file_score
+
+dbWriteTable(conn, "score", file_score, row.names=F) 
+result <- dbGetQuery(conn, "select * from score")
+result
+dbDisconnect(conn) # db연결해제 
+
+
+#### sqldf : R + sql ####
+detach("package:RMySQL",unload=T)
+
+install.packages("sqldf")
+library(sqldf)
+
+head(iris)
+sqldf("select * from iris limit 6")
+
+iris %>% select(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width,Species) %>% arrange(Species) %>% head(10)
+iris[1:10, c(1,2,3,4)]
+sqldf("select * from iris order by species limit 10")
+
+iris %>% summarise(sum=sum(Sepal.Length))
+sqldf('select sum("Sepal.Length") from iris')
+
+unique(iris$Species)
+sqldf("select distinct species from iris")
+
+table(iris$Species)
+sqldf("select species, count(*) from iris group by species")
