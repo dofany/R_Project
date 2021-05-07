@@ -529,3 +529,6 @@ sqldf("select distinct species from iris")
 
 table(iris$Species)
 sqldf("select species, count(*) from iris group by species")
+
+table(iris$Sepal.Length)
+
