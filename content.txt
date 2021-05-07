@@ -137,8 +137,20 @@ V. MySQL 연동
   insert into score(student_no,kor,eng,mat) values('4',90,87,70);
   insert into score(student_no,kor,eng,mat) values('5',90,60,70);
 
+============================================================
 
+VI. 과제
 
+1. 서울시에 치킨집이 가장 많은 지역은 어디인가?
+  http://localdata.kr
+  
+2. 서울시의 공기 오염도 현황 2017~2019 일산화질소 농도 변화를 조사
+  http://data.seoul.go.kr/dataList/OA-2218/S/1/datasetView.do
+  
+3. 지하철역 주변 아파트 가격 알아보기
+  http://data.seoul.go.kr
+  http://rtdown.molit.go.kr
+  
 
 
 
