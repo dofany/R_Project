@@ -118,7 +118,24 @@ IV. Data PreProcessing(전처리)
   3) Dummy(one hot Encoding) : 범주형 변수를 연속형 변수로 변환
   4) Transform : 기존 존재하는 변수의 성질을 이용해 다른 변수를 만드는 방법
   
+============================================================
 
+V. MySQL 연동
+
+  create database rtest;
+  use rtest;
+  create table score(
+    student_no varchar(50) primary key,
+    kor int default 0,
+    eng int defatul 0,
+    mat int default 0
+  );
+  
+  insert into score(student_no,kor,eng,mat) values('1',90,80,70);
+  insert into score(student_no,kor,eng,mat) values('2',90,88,70);
+  insert into score(student_no,kor,eng,mat) values('3',90,89,70);
+  insert into score(student_no,kor,eng,mat) values('4',90,87,70);
+  insert into score(student_no,kor,eng,mat) values('5',90,60,70);
 
 
 
