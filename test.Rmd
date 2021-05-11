@@ -1,0 +1,40 @@
+---
+title: "test"
+author: 홍길동
+data: '2021 5 11'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## 이것은 테스트 입니다.
+간단한 **코드**를 작성해 보겠습니다.
+코드를 작성하기 위해서는 **ctrl + alt + i**를 눌러주시면 됩니다.
+실행은 ctrl + enter를 눌러주면 됩니다.
+
+```{r}
+library(ggplot2)
+qplot(data=mpg, x=drv, fill=drv)
+```
